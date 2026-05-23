@@ -31,6 +31,32 @@ class LightClassifier:
             return
         try:
             import fasttext  # type: ignore
+            from fasttext.FastText import _FastText
+            import numpy as np
+
+            if not getattr(_FastText.predict, "_pihole_patched", False):
+
+                def _predict(self, text, k=1, threshold=0.0, on_unicode_error="strict"):
+                    if isinstance(text, list):
+                        text = [
+                            entry + "\n" if not entry.endswith("\n") else entry for entry in text
+                        ]
+                        all_labels, all_probs = self.f.multilinePredict(
+                            text, k, threshold, on_unicode_error
+                        )
+                        return all_labels, np.asarray(all_probs)
+                    entry = text if text.find("\n") == -1 else text.replace("\n", " ")
+                    if not entry.endswith("\n"):
+                        entry += "\n"
+                    predictions = self.f.predict(entry, k, threshold, on_unicode_error)
+                    if predictions:
+                        probs, labels = zip(*predictions)
+                    else:
+                        probs, labels = ([], ())
+                    return labels, np.asarray(probs)
+
+                _predict._pihole_patched = True  # type: ignore[attr-defined]
+                _FastText.predict = _predict
 
             self._model = fasttext.load_model(str(path))
         except Exception:

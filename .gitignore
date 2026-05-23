@@ -9,5 +9,9 @@ data/fasttext_train.txt
 config/config.yaml
 models/*.bin
 models/*.gguf
+examples/output/*.ftz
+examples/output/*.bin
+examples/output/metrics.json
+examples/data/*.txt
 .env
 *.log

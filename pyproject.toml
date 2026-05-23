@@ -17,7 +17,7 @@ dependencies = [
 ml = [
     "fasttext-wheel>=0.9.2",
     "onnxruntime>=1.20.0",
-    "numpy>=2.0.0",
+    "numpy>=1.26.0,<2.0.0",
 ]
 llm = [
     "llama-cpp-python>=0.3.0",
