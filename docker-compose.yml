@@ -1,0 +1,29 @@
+services:
+  adguard:
+    image: adguard/adguardhome:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "3000:3000/tcp"
+    volumes:
+      - adguard_work:/opt/adguardhome/work
+      - adguard_conf:/opt/adguardhome/conf
+    restart: unless-stopped
+
+  pihole-blocker:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+      - ./models:/app/models
+    depends_on:
+      - adguard
+    environment:
+      - TZ=Europe/Madrid
+    restart: unless-stopped
+
+volumes:
+  adguard_work:
+  adguard_conf:

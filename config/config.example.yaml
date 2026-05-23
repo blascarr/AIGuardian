@@ -1,0 +1,46 @@
+# Copiar a config/config.yaml y ajustar valores
+
+dns:
+  # adguard | pihole
+  provider: adguard
+  poll_interval_seconds: 5
+  batch_size: 100
+
+  adguard:
+    url: http://127.0.0.1:3000
+    username: admin
+    password: changeme
+
+  pihole:
+    url: http://127.0.0.1
+    # Obtener SID vía POST /api/auth (ver docs de tu instancia)
+    session_id: ""
+
+pipeline:
+  # Umbrales de confianza (0.0 - 1.0)
+  light_classifier_threshold: 0.75
+  heavy_classifier_threshold: 0.60
+  # Solo ejecutar MobileBERT si la capa ligera cae en zona gris
+  gray_zone_min: 0.40
+  gray_zone_max: 0.75
+
+models:
+  fasttext_path: models/risk_classifier.ftz
+  mobilebert_onnx_path: models/mobilebert_quantized.onnx
+  # LLM opcional: solo para resúmenes en panel, NUNCA inline
+  llm_enabled: false
+  llm_model_path: models/qwen2.5-0.5b-instruct-q4.gguf
+
+database:
+  path: data/pihole_blocker.db
+
+api:
+  host: 0.0.0.0
+  port: 8080
+
+heuristics:
+  blocklists_dir: config/blocklists
+  # Etiquetas que generan incidente directo sin ML
+  hard_block_categories:
+    - malware
+    - phishing

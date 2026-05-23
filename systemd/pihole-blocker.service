@@ -1,0 +1,16 @@
+[Unit]
+Description=PiholeBlocker - Filtro DNS local con IA escalonada
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pihole-blocker
+WorkingDirectory=/opt/pihole-blocker
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/pihole-blocker/.venv/bin/pihole-blocker
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
